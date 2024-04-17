@@ -17,7 +17,7 @@ void InitPipelineState(PipelineState& pipelineState, RootSignature& rs, Shader& 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
     // ゲームの初期化
-    InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+    InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("ゲーム"));
 
     //////////////////////////////////////
     // ここから初期化を行うコードを記述する
