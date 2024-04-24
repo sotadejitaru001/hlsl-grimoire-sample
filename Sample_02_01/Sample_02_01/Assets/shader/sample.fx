@@ -32,11 +32,6 @@ VSOutput VSMain(VSInput In)
 // ピクセルシェーダー
 float4 PSMain(VSOutput vsOut) : SV_Target0
 {
-float4 color;
-coler.x=vsOut.color.x;
-coler.y=vsOut.color.y;
-coler.z=vsOut.color.z;
-color.w=1.0f;
-return coler;
-   // return float4(1.0f, 0.0f, 0.0f, 1.0f);
+
+    return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }
