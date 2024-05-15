@@ -2,6 +2,7 @@
 #include "system/system.h"
 #include "TrianglePolygon.h"
 
+
 // 関数宣言
 void InitRootSignature(RootSignature& rs);
 
@@ -30,14 +31,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     triangle.Init(rootSignature);
 
     // step-1 三角形ポリゴンにUV座標を設定
+    triangle.SetUVCoord(
+        0, 0.0f, 0.5f
 
+    );
+    triangle.SetUVCoord(
+        1, 0.5f, 0.0f
+
+    );
+    triangle.SetUVCoord(
+        2, 1.0f, 1.0f
+
+    );
     // step-2 テクスチャをロード
+    Texture tex;
+    tex.InitFromDDSFile(L"Assets/image/sample_00.dds");
 
     // ディスクリプタヒープを作成
     DescriptorHeap ds;
     ds.RegistConstantBuffer(0, cb); // ディスクリプタヒープに定数バッファを登録
 
     // step-3 テクスチャをディスクリプタヒープに登録
+    ds.RegistShaderResource(
+        0,
+        tex
+    );
+
 
     ds.Commit();                    //ディスクリプタヒープへの登録を確定
 
