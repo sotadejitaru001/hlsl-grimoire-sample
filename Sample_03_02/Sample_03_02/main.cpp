@@ -30,9 +30,41 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     TrianglePolygon triangle;
     triangle.Init(rootSignature);
 
+    /* // 4. 三角形の頂点バッファを作成
+    // 頂点配列を定義
+    SimpleVertex vertices[] = {
+        {
+            {-0.5f, -0.5f, 0.0f},
+            { 1.0f, 0.0f, 0.0f }
+        },
+        {
+            {-0.5f, 0.5f, 0.0f},
+            { 0.0f, 1.0f, 0.0f }
+        },
+        {
+            {0.5f, 0.5f, 0.0f},
+            { 0.0f, 1.0f, 0.0f }
+        },
+        {
+            { 0.5f, -0.5f, 0.0f },
+            { 0.0f, 0.0f, 1.0f }
+        },
+
+    };
+
+    VertexBuffer triangleVB;
+    triangleVB.Init(sizeof(vertices), sizeof(vertices[0]));
+    triangleVB.Copy(vertices);
+
+    // 5. 三角形のインデックスバッファを作成
+    //インデックス配列
+    uint16_t indices[] = {
+        0,1,2,0,2,3
+    };*/
+
     // step-1 三角形ポリゴンにUV座標を設定
     triangle.SetUVCoord(
-        0, 0.0f, 0.5f
+        0, 0.0f, 1.0f
 
     );
     triangle.SetUVCoord(
@@ -41,6 +73,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     );
     triangle.SetUVCoord(
         2, 1.0f, 1.0f
+
+    );
+    triangle.SetUVCoord(
+        3, 0.0f, 1.0f
 
     );
     // step-2 テクスチャをロード
