@@ -42,7 +42,15 @@ cbuffer DirectionLightCb : register(b1)
     float ptRange;          // ポイントライトの影響範囲
 
     // step-5 スポットライトのデータにアクセスするための変数を追加する
-
+    float3 spPosition;
+    float spDistanceRate;
+    float3 spColor;
+    float spRange;
+    float3 spDirection;
+    float spAngle;
+   
+    
+    
     float3 eyePos;          // 視点の位置
     float3 ambientLight;    // アンビエントライト
 };
@@ -82,6 +90,8 @@ SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
     psIn.normal = mul(mWorld, vsIn.normal); // 法線を回転させる
     psIn.uv = vsIn.uv;
 
+    //float t = dot()
+    
     return psIn;
 }
 
@@ -100,32 +110,67 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // ほとんどポイントライトと同じ
 
     // step-6 サーフェイスに入射するスポットライトの光の向きを計算する
-
+    float3 ligDir = psIn.worldPos - spPosition;
+    
+    ligDir = normalize(ligDir);
     // step-7 減衰なしのLambert拡散反射光を計算する
-
+    float3 diffSpotLight = CalcLambertDiffuse(
+    ligDir,
+    spColor,
+    psIn.normal
+    );
     // step-8 減衰なしのPhong鏡面反射光を計算する
-
+    float3 specSpotLight= CalcPhongSpecular(
+    ligDir,
+    spColor,
+    psIn.worldPos,
+    psIn.normal
+    );
+    
     // step-9 距離による影響率を計算する
-
+    float3 distance = length(psIn.worldPos - spPosition);
+    
+    float affect = 1.0f - 1.0f / spRange * distance;
+    if (affect < 0.0f)
+    {
+        affect = 0.0f;
+    }
+    
+    affect = pow(affect,3.0f);
     // step-10 影響率を乗算して反射光を弱める
-
+    diffSpotLight *= affect;
+    specSpotLight *= affect;
     // step-11 入射光と射出方向の角度を求める
-
+    float angle = dot(ligDir, spDirection);
+    
+    angle = abs(acos(angle));
     // step-12 角度による影響率を求める
-
+    affect = 1.0 - 1.0f / spAngle * angle;
+    
+    if (affect<0.0f)
+    {
+        affect = 0.0f;
+    }
+    
+    affect = pow(affect,0.5f);
+    
     // step-13 角度による影響率を反射光に乗算して、影響を弱める
-
+    diffSpotLight *= affect;
+    specSpotLight *= affect;
+    
     // ディレクションライト+ポイントライト+環境光を求める
-    float3 finalLig = directionLig
+        float3 finalLig = directionLig
                     + pointLig
                     + ambientLight;
 
     // step-14 スポットライトの反射光を最終的な反射光に足し算する
-
+    finalLig += diffSpotLight + specSpotLight;
+    
     float4 finalColor = g_texture.Sample(g_sampler, psIn.uv);
 
     // テクスチャカラーに求めた光を乗算して最終出力カラーを求める
     finalColor.xyz *= finalLig;
+    
 
     return finalColor;
 }
@@ -211,7 +256,7 @@ float3 CalcLigFromPointLight(SPSIn psIn)
     }
 
     // 影響の仕方を指数関数的にする。今回のサンプルでは3乗している
-    affect = pow(affect, 3.0f);
+    affect = pow(affect, 1.25f);
 
     // 拡散反射光と鏡面反射光に減衰率を乗算して影響を弱める
     diffPoint *= affect;

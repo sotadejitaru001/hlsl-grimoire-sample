@@ -19,6 +19,9 @@ struct Light
 {
     DirectionLight directionLight;  // ディレクションライト
     Vector3 eyePos;                 // 視点の位置
+
+    float specular;
+    Vector3 env;
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -48,6 +51,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     light.directionLight.color.x = 0.5f;
     light.directionLight.color.y = 0.5f;
     light.directionLight.color.z = 0.5f;
+
+    light.specular = 25.0f;
+    light.env.x = 3.0f;
+    light.env.y = 3.0f;
+    light.env.z = 3.0f;
 
     // 視点の位置を設定する
     light.eyePos = g_camera3D->GetPosition();

@@ -40,6 +40,9 @@ cbuffer DirectionLightCb : register(b1)
 {
     DirectionLight directionLight;
     float3 eyePos; // 視点の位置
+    
+    float specular;
+    Vector3 env;
 };
 
 ///////////////////////////////////////////
@@ -114,7 +117,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float3 lig = diffuseLig + specularLig;
 
     // step-1 ライトの効果を一律で底上げする
-
+    lig.x += env.x;
+    lig.y += env.y;
+    lig.z += env.z;
     float4 finalColor = g_texture.Sample(g_sampler, psIn.uv);
 
     // テクスチャカラーに求めた光を乗算して最終出力カラーを求める

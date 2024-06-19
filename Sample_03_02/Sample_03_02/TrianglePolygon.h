@@ -4,7 +4,7 @@ class RenderContext;
 
 //頂点構造体
 struct SimpleVertex {
-	float pos[3];		//頂点座標。
+	float pos[4];		//頂点座標。
 	float color[3];		//頂点カラー。
 	float uv[2];		//UV座標。
 };
