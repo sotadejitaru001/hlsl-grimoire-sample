@@ -9,7 +9,10 @@ cbuffer cb : register(b0)
 };
 
 // step-4 ワイプサイズにアクセスするための定数バッファーを定義する
-
+cbuffer WipeCB : register(b1)
+{
+    float wipeSize; //ワイプサイズ
+};
 struct VSInput
 {
     float4 pos : POSITION;
@@ -38,6 +41,7 @@ float4 PSMain(PSInput In) : SV_Target0
     float4 color = colorTexture.Sample(Sampler, In.uv);
 
     // step-5 ワイプサイズの値に応じてピクセルをクリップする
-
+    clip(In.pos.x - wipeSize);
+    
     return color;
 }

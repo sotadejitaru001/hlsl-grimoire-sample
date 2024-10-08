@@ -9,6 +9,11 @@ cbuffer cb : register(b0)
 };
 
 // step3 ワイプパラメータにアクセスするための定数バッファを定義
+cbuffer WipeCB : register(b1)
+{
+    float2 wipeDirection; //ワイプの方向
+    float wipeSize; //ワイプサイズ
+};
 
 struct VSInput
 {

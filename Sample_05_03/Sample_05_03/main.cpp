@@ -33,7 +33,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // ゲームの初期化
     InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
 
-    g_camera3D->SetPosition({ 0.0f, 30.0f, 150.0f });
+    g_camera3D->SetPosition({ 200.0f, 30.0f, 10.0f });
     g_camera3D->SetTarget({ 0.0f, 30.0f, 0.0f });
 
     //////////////////////////////////////
@@ -74,7 +74,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         qRotY.Apply(light.dirDirection);
 
         // 背景モデルをドロー
-        // bgModel.Draw(renderContext);
+         bgModel.Draw(renderContext);
 
         // ティーポットモデルをドロー
         teapotModel.Draw(renderContext);

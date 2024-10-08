@@ -40,6 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
     // ワイプサイズ
     float monochromeRate = 0.0f;
+    bool a = false;
     spriteInitData.m_expandConstantBuffer = &monochromeRate;
     spriteInitData.m_expandConstantBufferSize = sizeof(monochromeRate);
 
@@ -64,10 +65,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         // ここから絵を描くコードを記述する
         //////////////////////////////////////
         // ワイプサイズを増やして少しずつワイプさせる
-        monochromeRate += 0.01f;
+       
         if (monochromeRate > 1.0f) {
-            monochromeRate = 1.0f;
+            a = true;
         }
+        else if(monochromeRate<0.0f){
+            a = false;
+        }
+        
+        if (a) {
+            monochromeRate -= 0.01f;
+        }
+        else{
+            monochromeRate += 0.01f;
+        }
+
         // スプライトのドローコールを実行する
         test2D.Draw(renderContext);
 

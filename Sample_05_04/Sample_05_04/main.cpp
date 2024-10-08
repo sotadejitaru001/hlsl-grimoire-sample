@@ -18,6 +18,11 @@ struct Light
     float pad3;
 
     // step-1 地面色と天球色、地面の法線を追加する
+    Vector3 groundColor;
+    float pad4;
+    Vector3 skyColor;
+    float pad5;
+    Vector3 groundNormal;
 };
 
 //////////////////////////////////////
@@ -53,7 +58,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     InitAmbientLight(light);
 
     // step-2 地面色、天球色、地面の法線のデータを設定する
+    light.groundColor.x = 0.7f;
+    light.groundColor.y = 0.5f;
+    light.groundColor.z = 0.3f;
 
+    light.skyColor.x = 0.15f;
+    light.skyColor.y = 0.7f;
+    light.skyColor.z = 0.95f;
+
+    light.groundNormal.x = 0.0f;
+    light.groundNormal.y = 1.0f;
+    light.groundNormal.z = 0.0f;
     // モデルを初期化する
     // モデルを初期化するための情報を構築する
     Model lightModel, bgModel, teapotModel;
@@ -157,9 +172,9 @@ void InitDirectionLight(Light& light)
     light.dirDirection.Normalize();
 
     // ライトのカラーは白
-    light.dirColor.x = 0.5f;
-    light.dirColor.y = 0.5f;
-    light.dirColor.z = 0.5f;
+    light.dirColor.x = 0.85f;
+    light.dirColor.y = 0.25f;
+    light.dirColor.z = 0.25f;
 
     // 視点の位置を設定する
     light.eyePos = g_camera3D->GetPosition();
