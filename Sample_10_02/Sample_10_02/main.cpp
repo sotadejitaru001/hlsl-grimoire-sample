@@ -19,6 +19,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
     // step-1 オフスクリーン描画用のレンダリングターゲットを作成
 
+    RenderTarget offscreenRenderTarget;
+
+    offscreenRenderTarget.Create(
+        1280, 720, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_D32_FLOAT
+    );
+
     // 各種モデルを初期化する
     // 背景モデルを初期化
     ModelInitData bgModelInitData;
@@ -37,7 +43,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     plModel.Init(plModelInitData);
 
     // step-2 ポストエフェクト実行用のスプライトを初期化する
-    
+    SpriteInitData spriteInitData;
+
+    spriteInitData.m_textures[0] = &offscreenRenderTarget.GetRenderTargetTexture();
+
+    spriteInitData.m_width = 1280;
+    spriteInitData.m_height = 720;
+
+    spriteInitData.m_fxFilePath = "Assets/shader/samplePostEffect.fx";
+
+    Sprite monochromeSprite;
+    monochromeSprite.Init(spriteInitData);
+
     //////////////////////////////////////
     // 初期化を行うコードを書くのはここまで！！！
     //////////////////////////////////////
@@ -54,12 +71,29 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //////////////////////////////////////
 
         // step-3 レンダリングターゲットを変更する
+        RenderTarget* rtArray[] = { &offscreenRenderTarget };
+
+        renderContext.WaitUntilToPossibleSetRenderTargets(1, rtArray);
+
+        renderContext.SetRenderTargets(1, rtArray);
+
+        renderContext.ClearRenderTargetViews(1, rtArray);
 
         // step-4 offscreenRenderTargetに各種モデルを描画する
+        bgModel.Draw(renderContext);
 
+        plModel.Draw(renderContext);
+
+        renderContext.WaitUntilFinishDrawingToRenderTargets(1, rtArray);
         // step-5 画面に表示されるレンダリングターゲットに戻す
+        renderContext.SetRenderTarget(
+            g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
+            g_graphicsEngine->GetCurrentFrameBuffuerDSV()
+        );
+
 
         // step-6 フルスクリーン表示のスプライトを描画する
+        monochromeSprite.Draw(renderContext);
 
         //////////////////////////////////////
         // 絵を描くコードを書くのはここまで！！！

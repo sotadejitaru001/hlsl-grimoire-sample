@@ -45,10 +45,44 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     Light light;
 
     // step-1 メインレンダリングターゲットと深度レンダリングターゲットを作成
+    RenderTarget mainRenderTarget;
+    mainRenderTarget.Create(
+        1280,
+        720,
+        1,
+        1,
+        DXGI_FORMAT_R32G32B32A32_FLOAT,
+        DXGI_FORMAT_D32_FLOAT
+    );
+
+    RenderTarget depthRenderTarget;
+    depthRenderTarget.Create(
+        1280,
+        720,
+        1,
+        1,
+        DXGI_FORMAT_R32_FLOAT,
+        DXGI_FORMAT_UNKNOWN
+    );
 
     // step-2 シーンテクスチャをぼかすためのガウシアンブラーオブジェクトを初期化
+    GaussianBlur blur;
+    blur.Init(&mainRenderTarget.GetRenderTargetTexture());
 
     // step-3 ボケ画像合成用のスプライトを初期化する
+    SpriteInitData combineBokeImageSpriteInitData;
+
+    combineBokeImageSpriteInitData.m_textures[0] = &blur.GetBokeTexture();
+    combineBokeImageSpriteInitData.m_textures[1] = &depthRenderTarget.GetRenderTargetTexture();
+    combineBokeImageSpriteInitData.m_width = 1280;
+    combineBokeImageSpriteInitData.m_height = 720;
+    combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/samplePostEffect.fx";
+    combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+    combineBokeImageSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+    Sprite combineBokeImageSprite;
+    combineBokeImageSprite.Init(combineBokeImageSpriteInitData);
 
     // メインレンダリングターゲットの絵をフレームバッファにコピーするためのスプライトを初期化
     // スプライトの初期化オブジェクトを作成する
